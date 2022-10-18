@@ -1,17 +1,20 @@
+import { Routes, Route } from "react-router-dom";
+import About from "./pages/About";
+import Api from "./pages/Api";
 import Header from "./Components/Header/Header";
-import Tasks from "./Components/Tasks/Tasks";
-import TasksContextProvider from "./Contexts/TasksContext";
+import Tasks from "./pages/Tasks";
 
 const App = () => {
 
 	return (
 		<>
 			<Header />
-			<TasksContextProvider>
-				<section className='container' style={{ position: 'relative' }}>
-					<Tasks />
-				</section>
-			</TasksContextProvider>
+			<Routes>
+				<Route path="/" element={<Tasks />} />
+				<Route path="/about" element={<About />} />
+				<Route path="/about/:name" element={<About />} />
+				<Route path="/api" element={<Api />} />
+			</Routes>
 		</>
 	);
 };

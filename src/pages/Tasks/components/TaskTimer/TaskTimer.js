@@ -1,16 +1,18 @@
-import Button from "../../UI/Button/Button";
+import Button from "../../../../Components/UI/Button/Button";
 import style from './TaskTimer.module.css';
-import useTimer from '../../../Hooks/useTimer';
-import useTimeParser from '../../../Hooks/useTimeParser';
+import useTimer from '../../../../Hooks/useTimer';
 import { useContext, useEffect } from "react";
-import { TasksContext } from "../../../Contexts/TasksContext";
+// import { TasksContext } from "../../../Contexts/TasksContext";
+import { editTask } from '../../.././../store/TasksSlice';
+import { useDispatch } from 'react-redux';
+import { parseSecondsToHMS } from '../../../../utils/time';
 
 const TaskTimer = ({ index, onCloseModal }) => {
 
 	const { time, startTimer, stopTimer } = useTimer();
-	const { parseSecondsToHMS } = useTimeParser();
 
-	const { editTask } = useContext(TasksContext);
+	// const { editTask } = useContext(TasksContext);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		startTimer();
@@ -22,7 +24,7 @@ const TaskTimer = ({ index, onCloseModal }) => {
 
 	const handleStopTimer = () => {
 		const savedTime = stopTimer();
-		editTask({ taskIndex: index, task: { time: savedTime }});
+		dispatch(editTask({ taskIndex: index, task: { time: savedTime }}));
 		onCloseModal();
 	}
 

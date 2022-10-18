@@ -1,8 +1,11 @@
 import { useContext, useState } from "react";
-import { TasksContext } from "../../Contexts/TasksContext";
-import Button from "../UI/Button/Button";
-import TextareaField from "../UI/Forms/TextareaField";
-import TextField from "../UI/Forms/TextField";
+// import { TasksContext } from "../../Contexts/TasksContext";
+import Button from "../../../Components/UI/Button/Button";
+import TextareaField from "../../../Components/UI/Forms/TextareaField";
+import TextField from "../../../Components/UI/Forms/TextField";
+import PropTypes from 'prop-types';
+import { addTask, editTask } from '../../../store/TasksSlice';
+import { useDispatch } from 'react-redux';
 
 const TaskForm = ({ closeModal, value, index }) => {
 
@@ -13,7 +16,9 @@ const TaskForm = ({ closeModal, value, index }) => {
 
 	const [ invalidFields, setInvalidFields ] = useState([]);
 
-	const { addTask, editTask } = useContext(TasksContext);
+	// const { addTask, editTask } = useContext(TasksContext);
+
+	const dispatch = useDispatch();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -23,13 +28,9 @@ const TaskForm = ({ closeModal, value, index }) => {
 		}
 
 		if (value && !isNaN(+index)) { // S'il y a une value en props => Modification
-			editTask({ task: formValue, taskIndex: index});
+			dispatch(editTask({ task: formValue, taskIndex: index }));
 		} else { // Sinon => Création
-			addTask({
-				...formValue,
-				createdAt: new Date(),
-				isDone: false,
-			});
+			dispatch(addTask(formValue));
 		}
 
 		closeModal();
@@ -95,3 +96,17 @@ const TaskForm = ({ closeModal, value, index }) => {
 };
 
 export default TaskForm;
+
+TaskForm.propTypes = {
+	closeModal: PropTypes.func.isRequired,
+	value: PropTypes.shape({
+		title: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+	}),
+	index: PropTypes.number,
+};
+
+TaskForm.defaultProps = {
+	value: null,
+	index: null,
+};

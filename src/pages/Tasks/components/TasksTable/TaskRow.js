@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
-import { TasksContext } from "../../../Contexts/TasksContext";
-import useTimeParser from "../../../Hooks/useTimeParser";
-import Button from "../../UI/Button/Button";
-import Modal from "../../UI/Modal/Modal";
+import { useDispatch } from 'react-redux';
+import { parseSecondsToHMS } from '../../../../utils/time';
+// import { TasksContext } from "../../../Contexts/TasksContext";
+import { removeTask, toggleTaskIsDone } from '../../../../store/TasksSlice';
+import Button from "../../../../Components/UI/Button/Button";
+import Modal from "../../../../Components/UI/Modal/Modal";
 import TaskForm from "../TaskForm";
 import TaskTimer from "../TaskTimer/TaskTimer";
 
@@ -11,17 +13,16 @@ const TaskRow = ({ task, index }) => {
 	const [ isEditTaskModalOpen, setIsEditTaskModalOpen ] = useState(false);
 	const [ isTimerModalOpen, setIsTimerModalOpen ] = useState(false);
 	
-	const { removeTask, toggleTaskIsDone } = useContext(TasksContext);
-
-	const { parseSecondsToHMS } = useTimeParser();
+	// const { removeTask, toggleTaskIsDone } = useContext(TasksContext);
+	const dispatch = useDispatch();
 
 	const handleDeleteTask = () => {
-		removeTask(index);
+		dispatch(removeTask(index));
 	}
 
 	const handleChangeStatus = (event) => {
 		const value = event.target.checked;
-		toggleTaskIsDone({ taskIndex: index, isDone: value });
+		dispatch(toggleTaskIsDone({ taskIndex: index, isDone: value }));
 	}
 
 	return (
@@ -37,7 +38,7 @@ const TaskRow = ({ task, index }) => {
 					{ task.description }
 				</td>
 				<td>
-					{ task.createdAt.toLocaleDateString() }
+					{ new Date(task.createdAt).toLocaleDateString() }
 				</td>
 				<td>
 					{ task.time && parseSecondsToHMS(task.time) }

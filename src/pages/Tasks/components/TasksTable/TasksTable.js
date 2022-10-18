@@ -1,11 +1,13 @@
 import { useContext } from 'react';
-import { TasksContext } from '../../../Contexts/TasksContext';
+import { useSelector } from 'react-redux';
+// import { TasksContext } from '../../../Contexts/TasksContext';
 import TaskRow from './TaskRow';
 import style from './TasksTable.module.css';
 
 const TasksTable = () => {
 
-	const { tasksData } = useContext(TasksContext);
+	// const { tasksData } = useContext(TasksContext);
+	const tasksData = useSelector(state => state.tasks);
 
 	return (
 		<div className={ style['tasks-table-container'] }>
@@ -23,7 +25,7 @@ const TasksTable = () => {
 				<tbody>
 					{
 						tasksData && tasksData.tasks && tasksData.tasks.map((task, index) => (
-							<TaskRow key={ Date.parse(task.createdAt) - index } task={ task } index={ index } />
+							<TaskRow key={ task.createdAt - index } task={ task } index={ index } />
 						))
 					}
 				</tbody>
